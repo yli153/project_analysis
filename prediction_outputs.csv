@@ -1,0 +1,25 @@
+,Name1,All,Name2,Serve,Name3,Return,Name4,Under Pressure
+0,Novak_Djokovic,0.667208867,Nikoloz_Basilashvili,0.690394221,Roger_Federer,0.612838346,John_Isner,0.77095308
+1,Roberto_Bautista_Agut,0.643868737,Novak_Djokovic,0.651186888,Nikoloz_Basilashvili,0.599875041,Karen_Khachanov,0.652386783
+2,Pablo_Carreno_Busta,0.623217039,Hubert_Hurkacz,0.647114552,Denis_Shapovalov,0.579241061,Borna_Coric,0.596127306
+3,Roger_Federer,0.620411132,Pablo_Carreno_Busta,0.598122612,John_Isner,0.575392615,Roger_Federer,0.559334258
+4,Nikoloz_Basilashvili,0.614216767,Roberto_Bautista_Agut,0.595687471,Nick_Kyrgios,0.556823076,Nick_Kyrgios,0.536874888
+5,Stefanos_Tsitsipas,0.55237365,Roger_Federer,0.558434043,Matteo_Berrettini,0.535548728,Denis_Shapovalov,0.532250453
+6,Daniil_Medvedev,0.54346237,Rafael_Nadal,0.536242404,Stefanos_Tsitsipas,0.527760942,Alexander_Zverev,0.52929508
+7,Hubert_Hurkacz,0.511604988,Dominic_Thiem,0.524949912,Alexander_Zverev,0.519859816,Stefanos_Tsitsipas,0.519218956
+8,Denis_Shapovalov,0.506169067,Daniil_Medvedev,0.524632818,Novak_Djokovic,0.507194354,Novak_Djokovic,0.517196889
+9,Rafael_Nadal,0.486270603,Karen_Khachanov,0.509674362,Daniil_Medvedev,0.498869759,Nikoloz_Basilashvili,0.512178723
+10,Karen_Khachanov,0.467652118,Dusan_Lajovic,0.506593552,Dominic_Thiem,0.4908962,Pablo_Carreno_Busta,0.510277886
+11,Alexander_Zverev,0.439178774,Denis_Shapovalov,0.486748336,Grigor_Dimitrov,0.484545552,Roberto_Bautista_Agut,0.497981357
+12,Dominic_Thiem,0.420269699,Andrey_Rublev,0.455397164,Gael_Monfils,0.467861168,Daniil_Medvedev,0.494122286
+13,Nick_Kyrgios,0.407362954,Alexander_Zverev,0.443467658,Roberto_Bautista_Agut,0.459949479,Rafael_Nadal,0.491470104
+14,Andrey_Rublev,0.395329044,Grigor_Dimitrov,0.440490202,Rafael_Nadal,0.450332776,Grigor_Dimitrov,0.47730917
+15,Borna_Coric,0.390780609,Borna_Coric,0.438040671,Dusan_Lajovic,0.442544223,Dusan_Lajovic,0.466492283
+16,Grigor_Dimitrov,0.375198345,Stefanos_Tsitsipas,0.418289016,Borna_Coric,0.437462387,Matteo_Berrettini,0.45618082
+17,Gael_Monfils,0.341694233,Fabio_Fognini,0.396443346,Hubert_Hurkacz,0.422591161,David_Goffin,0.446983632
+18,David_Goffin,0.2558735,Gael_Monfils,0.383661699,David_Goffin,0.420667053,Dominic_Thiem,0.424420928
+19,Matteo_Berrettini,0.20538932,Benoit_Paire,0.334088841,Benoit_Paire,0.416845572,Gael_Monfils,0.419691453
+20,Benoit_Paire,0.193528738,Nick_Kyrgios,0.25364735,Andrey_Rublev,0.391471692,Andrey_Rublev,0.417999897
+21,Dusan_Lajovic,0.167636948,David_Goffin,0.250802134,Karen_Khachanov,0.355950965,Hubert_Hurkacz,0.411630135
+22,John_Isner,0.128786249,Matteo_Berrettini,0.222326948,Fabio_Fognini,0.315716514,Benoit_Paire,0.384918522
+23,Fabio_Fognini,-0.114890543,John_Isner,-0.053124169,Pablo_Carreno_Busta,0.081351646,Fabio_Fognini,0.32124573
