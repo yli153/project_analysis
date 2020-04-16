@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+        .columnval {
+          float: left;
+          width: 47.5%;
+          padding: 5px;
+        }
+        .rowval::after {
+          clear: both;
+          display: table;
+        }
+        body {
+        height: 768px;
+        width: 800px;
+        /* to centre page on screen*/
+        margin-left: auto;
+        margin-right: auto;
+        }
+        </style>
+        </head>
+    <body>
+    <h2 style="text-align: center;"><span style="color: #3366ff;">
+        <u>Who is the Next Winner of U.S. Open?</u></span><u></u></h2>
+    <h3><span style="color: #333399;"><strong>
+        Project Overview and Prediction Goal</strong></span></h3>
+    <p>Inspired by the Australia Open that just concluded and the increasing role of data analytics 
+       in sports, our project aims to develop insightful predictions about wins and losses in tennis 
+       matches by collecting, cleaning, categorizing and applying statistical as well as machine 
+       learning techniques to identify interesting patterns in past data.</p>
+    <p><strong>Prediction Task</strong>: Among the current Top 30 male singles tennis players by ATP 
+        rankings, who has the highest probability of winning the 2020 U.S. Open?</p>
+    <p><strong>Sub-Questions to Investigate:</strong></p>
+    <ul>
+        <li>What factors determine the outcome of a tennis match (i.e. wins and losses)?</li>
+        <li>Among those factors, which ones are the most indicative of a match outcome (i.e. most 
+            influential features)?</li>
+        <li>How does our prediction compare to the current ATP male singles ranking?</li>
+        <li>Are there any patterns shared amongst players themselves? </li>
+    </ul>
+    <p><strong>Metrics to Measure Success:</strong></p>
+    <ul>
+        <li>
+            Regression Test: Adjusted R-squared value, Training and Testing Mean Squared Errors
+        </li>
+        <li>
+            K-Means Clustering: Qualitative analysis with respect to the generally accepted 
+            classification of each player&apos;s style
+        </li>
+        <li>
+            Comparison with the ATP rankings: Kendall&apos;s Tau Correlation Coefficient
+        </li>
+    </ul>
+    <h3><span style="color: #333399;"><strong>Data Cleaning and Processing</strong></span></h3>
+    <p>We used two primary data sources for this project: the Match Charting Project, a collaborative, 
+       crowdsourcing Github repository which documents the point-by-point statistics for each player in
+       a match, and the ATP official website. From the Match Charting Project, we collected data for 1000+ 
+       matches (hard surfaces only), filtered them by keeping the 197 matches between Top 30 male singles 
+       players ranked by ATP by 2020/02/24, and extracted 60+ different features encompassing serve, return, 
+       under pressure, shot directions, shot types and many other aspects of a match. After processing 
+       the features and eliminating the ones that contain over half null values, we were left with 28 
+       &quot;good&quot; features, all with values between 0 and 1, across 394 observations concerning 26 
+       out of the Top 30 players. The selected features strike a balance between wide coverage of different 
+       components of a match and the limitations of too many null values. The detailed description of each 
+       feature and processed data can be found under &quot;features.xlsx&quot; and &quot;processed_data.csv&quot; 
+       in the Github repository. From the ATP official website, we scraped the data pertaining to serve, return 
+       and under pressure leaders, and service and return games won from 2015 to 2019, all of which were clean 
+       and required no restructuring.
+    </p>
+    <h3><span style="color: #333399;"><strong>Preliminary Data Analysis</strong></span></h3>
+    <p><div style="display: flex; justify-content: center;">
+            <img src="visualizations/features_std.png" alt="Standard Deviation of Features" style="width: 800px; height: 600px;"/>
+        </div>
+        When we looked at the visualization for standard deviation of each feature, we noticed that most 
+        features have a standard deviation of less than 0.1. This implies that there is a certain amount 
+        of skill level that each player must achieve within these features to be deemed a Top 30 player. 
+        The potentially more interesting features to look at, however, are those with greater standard deviation, 
+        signalling that there is greater variance in the player&apos;s performance in these features. For example, 
+        &quot;win_pct_bps&quot;, which represents the percentage of breakpoints won, stands out as having 
+        the highest standard deviation near 0.25. We expect this feature could be a differentiating, or indicative, 
+        factor when determining top tennis players. 
+    </p>
+    <h3><span style="color: #333399;"><strong>Statistical Test 1: Linear Regression</strong></span></h3>
+    <p> To solve our prediction task, we have chosen to perform linear regression, the most commonly used 
+        type of predictive analysis. It helps us to examine whether some subset of the 28 features do a good 
+        job in predicting the outcome of a match and in what ways these variables impact the match outcome 
+        (i.e. sign and magnitude of the coefficients). In our linear regression model, each observation or 
+        data point is specific to one player in the match. The dependent variable is the match outcome which 
+        is binary (i.e. 0 if the player loses and 1 if the player wins), while the regressors are the performance
+        statistics of the player in that match. </p>
+    <p> Our processed tennis data consists of a total of 394 observations, each with 28 features which cover 
+        different aspects of a tennis match such as shot directions, serve performance, return quality, forced 
+        and unforced errors and many others. We split the 394 observations so that we could use 80% of data points 
+        for training and the resulting 20% for testing. Multiple and single linear regression was then run with 
+        20+ different subsets of the features and the chart below summarizes 6 regression results and our intuition 
+        of running them. </p>
+    <p><strong> Table: Summary of 6 Interesting Regression Tests</strong></p>
+        <div style="display: flex; justify-content: center;">
+            <img src="visualizations/regression_tests.png" alt="Regression Tests" style="width: 800px; height: 400px;"/>
+        </div>
+    <p> Among all regression tested, the multiple linear regression that encompasses all 28 features gave us 
+        the highest adjusted R-squared value of <strong>0.597</strong>. The complete regression results are 
+        shown in the figure below. </p>
+        <div style="display: flex; justify-content: center;">
+            <img src="visualizations/regression_best.JPG" alt="Best Regression" style="width: 600px; height: 800px;"/>
+        </div>
+    </p>
+    <p><strong>Intepretation and Evaluation:</strong>
+        <ul>
+            <li> <strong>Adjusted R-squared value</strong>: this particular regression model, all inclusive of 
+                28 features, yields the highest adjusted R-squared value of <strong>0.597</strong>, meaning that
+                the 28 features collectively explain about 60% of the variances in the match outcome. We are fairly
+                satisfied about the adjusted R<sup>2</sup> value of 0.597 because we lost many features that we 
+                deemed important during data cleaning and restructuring. 
+                <br><i>*Note: adjusted R<sup>2</sup> value is examined rather than R<sup>2</sup> value. More features
+                would always increase the explained sum of squares and R<sup>2</sup> value, and therefore we need to 
+                account for the degree of freedom by looking at adjusted R<sup>2</sup> value.</i>
+            </li>
+            <br>
+            <li><strong>Training and Testing MSEs</strong>: our training and testing MSEs are 0.0958 and 0.1383. 
+                Compared to other regression tests we&apos;ve run, the testing MSE of 0.1383 is higher by a 
+                relatively larger amount than the training MSE, suggesting potential overfitting of our model. 
+                However, the difference was not too significant and we decided to proceed with this regression model 
+                for prediction since it provides the highest adjusted R-squared value and relatively small training 
+                and testing MSEs.
+            </li>
+            <br>
+            <li><strong>Coefficients and their p-values</strong>: considering our primary goal of predicting winners, 
+                we decided to maximize the adjusted R-squared value despite potential compromises in p-values. 
+                In the regression result, we did acknowledged many high p-values (i.e. greater than 0.05) on the 
+                coefficients, suggesting that there is no statistically significant evidence that the coefficients
+                on those features are different from zero. However, one possible reason is that many of the features 
+                are somewhat intercorrelated. For example, the winning % of long rallies (i.e. regressor x9), may be 
+                dependent on the advantages established by high-quality serve and forehand and backhand returns. It is 
+                indeed both statistically and practically difficult to extract solely isolated features because tennis 
+                matches are continuous and shots are built upon each other.  
+            </li>
+        </ul>
+
+    </p>
+    <p> We then calculated each player&apos;s average performance for each feature from historical matches and applied 
+        the weights and constant derived from the multiple linear regression shown above to the averages. According to
+        the predicted outcome, the Top 5 candidates for winning the crown are: <strong><span style="color: #ff6600;">Novak 
+            Djokovic, Roberto Bautista Agut, Pablo Carreno Busta, Roger Federer, and Nikoloz Basilashvili</span></strong>.</p>
+    <h4><strong>Prediction Result Visualization:</strong></h4>
+    <div style="display: flex; justify-content: center;">
+        <img src="visualizations/predicted_winner.jpg" alt="Predicted Winner" style="width: 600px; height: 400px;"/>
+      </div>
+    <h4><span style="color: #339966;">Sub-test: Recursive Feature Elimination</span></h4>
+    To figure out which out of the 28 features are most indicative of the match outcome, we have chosen to perform 
+    Recursive Feature Elimination (RFE), which would recursively remove features and build a model on those features 
+    that remain. RFE uses the model accuracy to identify which features (and combination of features) contribute the 
+    most to predicting the match outcome. In our implementation, we used logistic regression algorithm to select the 
+    top 6 features, which turned out to be: <strong>winning % of game points as the server, winning % of long rallies, winning
+    % of after return, winning % of forehand return, winning % of backhand return and winning % in less than or equal
+    to 3 strokes as the server</strong>. Initially, we were thinking about only picking out the three most important features
+    and using a 3D scatter plot to show all players&apos; performances on those; however, we eventually decided to use radar 
+    charts because they are visually clearer in terms of showing how well or badly each player does in each feature and 
+    highlighting anomalies if any. We therefore plotted the Top 5 candidates&apos; performance with respect to each of the 6 
+    features in radar charts first by player and then by feature (top). To see whether there are truly recognizable differences 
+    in the most and least likely winners&apos; scores in those features, we also plotted the same radar charts for the least 
+    likely winners (bottom). 
+    <h4><strong>Most Significant Predictors Visualization:</strong></h4>
+    <div class="rowval">
+        <div class="columnval">
+          <img src="visualizations/radar_chart_1.jpg" alt="Radar Chart by Player" style="width:100%">
+        </div>
+        <div class="columnval">
+          <img src="visualizations/radar_chart_2.jpg" alt="Radar Chart by Feature" style="width:100%">
+        </div>
+    </div>
+    <BR CLEAR="all">
+    <div class="rowval">
+        <div class="columnval">
+          <img src="visualizations/radar_chart_3.jpg" alt="Radar Chart by Player" style="width:100%">
+        </div>
+        <div class="columnval">
+          <img src="visualizations/radar_chart_4.jpg" alt="Radar Chart by Feature" style="width:100%">
+        </div>
+    </div>
+    <BR CLEAR="all">
+    <p><strong>Intepretation and Evaluation:</strong>
+        <ul>
+            <li>
+            Since these six features are the most important ones to predict match outcome (i.e. ones with 
+            the highest rank determined by RFE), the radar charts are in line with our expectation that the 
+            most likely winners will show stronger performance in those features than the least likely winners.
+            The decrease is evident visually from the smaller sizes of the "stars" in the charts on the bottom 
+            compared to the ones on the top. 
+            <li> To have a better understanding of the magnitude of discrepancy, we computed the averages and 
+                 standard deviations of each feature for top 5 players and least 5 players:
+                <div style="display: flex; justify-content: center;">
+                    <img src="visualizations/radar_analysis.png" alt="Radar Chart Analysis" style="width: 770px; height: 150px;"/>
+                  </div>
+                  <ul>
+                      <li>The averages across all features are higher for the top 5 players except for the winning % in 
+                        less than or equal to 3 strokes are the server. The largest differences in averages lie in the 
+                        winning % of long rallies and winning % of backhand returns, suggesting that the advantage in 
+                        backhand returns and ability to win long rallies are the most differentiating factors for players 
+                        who deemed to be a Top 30 player. 
+                      </li>
+                      <li>
+                        Meanwhile, we see higher standard deviations in winning % of game points as the server and 
+                        winning % of long rallies for the top players, yet higher standard deviations for winning 
+                        % in less than or equal to 3 strokes and winning % in backhand return for the least likely winners.
+                        This might suggest to us that among the most likely winners, under pressure ability is crucial given 
+                        their similar, high serve and return quality, while among the least likely winners, there is still 
+                        considerable variances in the quality of their serves and returns.
+                      </li>
+                  </ul>
+            </li>
+        </ul>
+    </p>
+    <h3><span style="color: #333399;"><strong>Statistical Test 2: K-Means Clustering</strong></span></h3>
+    <p>For the data scraped from the ATP official website, we have chosen to apply K-means clustering on 
+       individual players&apos; serve, return, and under pressure performances. In particular, we wanted 
+       to see whether the Top 30 players can be categorized into groups and identify the &quot;cluster&quot; 
+       to which our predicted winner belongs, which might provide additional insights to our prediction results.
+       To run the algorithm, we had to combine each player&apos; results from multiple years (i.e. 2015-2019) into 
+       one by computing the average. The optimal K from the elbow plot was 4 and therefore the players were 
+       separated into 4 groups, as shown in the below graphs. Some sensitive attributes that we are potentially 
+       missing are career length (i.e. older players tend to be more experienced at dealing with different opponents 
+       and pressure), injuries (not documented but may affect players&apos; performance), and weather conditions which 
+       may affect outdoor performance on hard surfaces.
+    </p>
+    <h4><span style="color: #339966;">K-means Clustering Visualization and Intepretation:</span></h4>
+    <div class="rowval">
+        <div class="columnval">
+          <img src="visualizations/k_means_2D_2.png" alt="KMeans 2D by avg servicereturn games won" style="width:100%">
+        </div>
+        <div class="columnval">
+          <img src="visualizations/k_means_2D.png" alt="KMeans 2D by avg serve/return rating" style="width:100%">
+        </div>
+    </div>
+    <BR CLEAR="all">
+    <p> &quot;Games_2d&quot;, the graph on the top left, shows relative strengths of each player with respect to ave_serve_games_won 
+        (% of games the player has won as the server) and ave_return_games_won (% of games the player has won as the 
+        receiver). &quot;Leaders_2d&quot;, the graph on the top right, shows relative strengths of each player with respect to 
+        ave_serve_rating (sum of four service metrics % + average number of aces per match - average number of double 
+        faults per match) and ave_return_rating (sum of winning percentages in the four service return categories). In these 
+        two graphs, K-means clustering algorithm classifies the players into four groups:
+        <ul>
+            <li><strong><span style="color: #3366ff;">Blue</span></strong>: Strong in both serves and returns</li>
+            <li><strong><span style="color: #ff6600;">Orange</span></strong>: Much stronger in serves than they are in returns</li>
+            <li><strong><span style="color: #339966;">Green</span></strong>: Much stronger in returns than they are in serves</li>
+            <li><strong><span style="color: #800000;">Red</span></strong>: Not particularly strong in either</li>
+        </ul>
+    </p>
+    <p> These clusters correspond to most mainstream comments on these players. For instance, R.Nadal, N.Djokovic, R.Federer 
+        are known for their well-rounded tennis skills, and they have been occupying the top 3 rankings for male tennis players 
+        for years. John Isner is known for his powerful serves, and Diego Schwartzman is famous for his effective returns, 
+        which are all in line with the output of k-means clustering algorithm. </p>
+    <div class="rowval">
+        <div class="columnval">
+          <img src="visualizations/k_means_2.png" alt="KMeans 3D by avg serve/return rating" style="width:100%">
+        </div>
+        <div class="columnval">
+          <img src="visualizations/k_means.png" alt="KMeans 3D by avg service/return games won" style="width:100%">
+        </div>
+    </div>
+    <p> &quot;Games_3d&quot;, the graph on the top left, adds another metric, ave_under_pressure_rating (sum of % of break points 
+        converted and saved, percentages of tie-breaks won, and percentage of deciding sets won). K-means clustering categories 
+        the players into four groups:
+        <ul>
+            <li><strong><span style="color: #3366ff;">Blue</span></strong>: Not particularly strong or weak in any of the three metrics</li>
+            <li><strong><span style="color: #ff6600;">Orange</span></strong>: Weak in serves, mediocre in returns and dealing with stress</li>
+            <li><strong><span style="color: #339966;">Green</span></strong>: Strong in all three metrics</li>
+            <li><strong><span style="color: #800000;">Red</span></strong>: Strong in serves, weak in returns, mediocre in dealing with stress</li>
+        </ul>
+    </p>
+    <p> As we can see, Federer, Nadal, and Djokovic are still leaders in all three categories, and although there are some changes 
+        in the other three groups, they remain mostly the same as Games_2d, which may be indicating that under pressure 
+        rating is less a significant factor in determining types of male tennis players than serve and return records are. 
+    </p>
+    <p>
+        Like Games_3d, Leaders_3d adds ave_under_pressure_rating as another metrics on the basis of Leaders_2d. However, 
+        we can notice some significant changes in the clusters when comparing Games_3d and Leaders_3d:
+        <ul>
+            <li>NK, JL, MB remain in the same cluster, but all other three clusters have significant changes.</li>
+            <li>In Leaders_3d&apos;s blue cluster, there are only Federer and Djokovic, whereas Nadal is not 
+                grouped in this cluster since his serve and return ratings are much different than those of 
+                Federer and Djokovic, even though they have similar winning percentages of serves and returns as 
+                indicated by Games_2d.
+            </li>
+            <li>The orange clusters in the two 3D graphs are drastically different. Given that the ave_under_pressure 
+                ratings are identical, the different measures of serves and returns in each graph lead to different 
+                clustering results. This difference raises a question about how to decide which measure of serves and 
+                returns produces a better, more accurate result. 
+            </li>
+        </ul>
+    </p>
+    <h3><span style="color: #333399;"><strong>GoldenBagel's Ranking v.s. ATP Ranking</strong></span></h3>
+    <p> Using weights and constants from linear regressions with all 28 features, only serve, only return and only 
+        under pressure-related features, we have ranked the players based on the predicted likelihood of winning and 
+        generated our own Stats LeaderBoards. We then looked at these players&apos; ranking on the ATP official website:
+        the overall rankings are from ATP&apos; male singles ranking whereas the serve, return and under pressure rankings
+        are scraped from the &quot;Stats LeaderBoard&quot; section filtered with fields &quot;versus Top 50 Players&quot;, 
+        &quot;52 weeks&quot; and &quot;Hard Surface&quot;. Since the ATP rankings are inclusive of all male tennis 
+        professionals, we decided to compare our rankings of the 26 players with their relative ATP rankings. The results
+        are summarized in the table below and we will be performing more in-depth analysis on this, specifically using the 
+        Kendall&apos;s Tau Correlation Coefficient. 
+    </p>
+    <div style="display: flex; justify-content: center;">
+        <img src="visualizations/stats_leaderboard.png" alt="Stats LeaderBoard" style="width: 800px; height: 400px;"/>
+      </div>
+
+    <h3><span style="color: #333399;"><strong>Challenges and Confounding Trends</strong></span></h3>
+    <ul>
+        <li>One challenge that we encountered is that when extracting and computing features from raw data, there 
+            appeared to be many null values, either because the contributor does not put in the relevant statistics
+            or because the players did not play the relevant shots in the match. We had to go through the data and 
+            disregard features with too many null values. In the end, we were only left with 28 features out of the 61
+            features of interest, losing nearly two-thirds of them (i.e. winning % of net shots and smashes) which might 
+            largely diminish the predictive power of our regression model. 
+        </li>
+        <br>
+        <li>The practical implications and significance of our regression model are worth second thought. Looking at 
+            the coefficients on the features, we find some of them counter-intuitive. For example, the coefficients on 
+            win_pct_gps (i.e. winning % of game points), serv_win_pct_bps (i.e. the % of winning breakpoints as the server), 
+            pct_win_long_rallies_initiated_by_opponents (i.e. the winning % of long rallies initiated by opponents) are negative, 
+            while the coefficient on pct_fcd_error_pts_rally (i.e. percentage of forced errors made during rallies) is positive, 
+            which contradicts our general understanding of tennis. We find those results confounding as they might be suggesting 
+            new insights into tennis matches, or might just be the trade-off between the predictive power and explanatory ability 
+            of our regression model.</li>
+    </ul>
+    <h3><span style="color: #333399;"><strong>Next Steps for Final Presentation</strong></span></h3>
+    <ul>
+        <li>
+            One shortcoming of regression model is that it might memorize particular combinations or values of
+            features that make a player win a match. For example, though we did not explicitly include the players&apos; 
+            identity in the inputs, the model might learn all the features of Federer because those features lead to 
+            winning for most of the time. As a result, it ends up determining the likelihood of winning based on how 
+            &quot;Federer&quot; a player is. To further evaluate the predictive power of our regression model, we will 
+            remove statistics for particularly outstanding players and see whether the model truly generalizes to any 
+            player (i.e. even players whom we have never seen them playing against top professionals before).
+        </li>
+        <br>
+        <li>
+            One further investigation idea is that the statistics from each match could be weighted differently based 
+            on the time it took place. The intuition behind is that the more recent matches are more predictive of a 
+            player&apos;s performance today than the older ones. We will attempt to run time-weighted regression 
+            (i.e. placing more weight on recent matches and placing less and less weight on older matchesh) 
+            and compare the results to the non-time-weighted ones.
+        </li>
+        <br>
+        <li>
+            Lastly, we want to compare our rankings in each of the overall, serve, return and under pressure category 
+            to the ATP relative rankings. We have already computed the results and displayed them side by side to the ATP 
+            ones in the table above, but would like to compute the Kendall&apos;s Tau Correlation Coefficient to quantify 
+            the differences.
+        </li>
+        <br>
+        <li>
+            With respect to visualization in our poster, we plan to include at least 4 different visualizations so far: 
+            a bar chart which lists the top 10 candidates for winning the 2020 U.S. Open chart with their corresponding
+            probability; radar charts that show top 5 players&apos; scores for the 6 most indicative features (by feature) and 
+            top 5 players&apos; scores for the 6 most indicative features (by player); a scatter plot demonstrtaing kmeans 
+            clustering that groups individual players together based on serve, return and under pressure statistics; and 
+            tables summarizing key regression results and comparison of our ranking v.s. ATP ranking.
+        </li>
+    </ul>
+    <h3><span style="color: #333399;"><strong>Extension of Our Prediction Model</strong></span></h3>
+    <p> In the future, we could potentially compare our results to other surfaces (eg. How do the rankings change if we were 
+        under grass and clay courts? What are considered more important features for court type?). In addition to focusing 
+        on men&apos;s rankings, we could also run our regression on women&apos;s data to see if the same features are predictive 
+        of success.</p>
+    </body>
+</html>
